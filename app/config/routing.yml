@@ -1,6 +1,10 @@
 app:
-    resource: "@AppBundle/Controller/"
+    resource: "@AppBundle/Controller/DefaultController.php"
     type:     annotation
 
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+product:
+    type:     rest
+    resource: AppBundle\Controller\ProductController

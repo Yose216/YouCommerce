@@ -278,4 +278,14 @@ class Product
     {
         return $this->categorie;
     }
+
+	public function addCategorie(Categorie $categorie)
+	{
+    $this->categorie = $categorie;
+	}
+
+  public function removeCategorie(Categorie $categorie)
+  {
+    $this->categorie->removeElement($categorie);
+  }
 }

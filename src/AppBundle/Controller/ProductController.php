@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
 
 /**
@@ -46,7 +47,10 @@ class ProductController extends Controller
             ];
         }
 
-        return new JsonResponse($formatted);
+        $view = View::create($formatted);
+        $view->setFormat('json');
+
+        return $view;
     }
 
     /**

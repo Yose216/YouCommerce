@@ -1,0 +1,29 @@
+# src/AppBundle/Resources/config/validation.yml
+AppBundle\Entity\Product:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: name
+    properties:
+        name:
+            - NotBlank: ~
+            - Type: string
+        image:
+            - NotBlank: ~
+            - Type: string
+        image2:
+            - NotBlank: ~
+            - Type: string
+        image3:
+            - NotBlank: ~
+            - Type: string
+        image4:
+            - NotBlank: ~
+            - Type: string
+        price:
+            - NotBlank: ~
+            - Type: string
+        description:
+            - NotBlank: ~
+            - Type: string
+        categorie:
+            - NotBlank: ~
+            - Type: string

@@ -8,3 +8,7 @@ fos_user:
 product:
     type:     rest
     resource: AppBundle\Controller\ProductController
+
+categorie:
+    type:     rest
+    resource: AppBundle\Controller\CategorieController

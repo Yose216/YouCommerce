@@ -24,6 +24,3 @@ AppBundle\Entity\Product:
         description:
             - NotBlank: ~
             - Type: string
-        categorie:
-            - NotBlank: ~
-            - Type: string

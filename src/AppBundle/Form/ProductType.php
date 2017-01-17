@@ -16,10 +16,7 @@ class ProductType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('image')->add('image2')->add('image3')->add('image4')->add('price')->add('description')->add('categorie', EntityType::class, array(
-    	'class' => 'AppBundle:Categorie',
-		'choice_label' => 'name',
-		));
+        $builder->add('name')->add('image')->add('image2')->add('image3')->add('image4')->add('price')->add('description');
 	}
     
     /**
@@ -41,5 +38,8 @@ class ProductType extends AbstractType
         return 'appbundle_product';
     }
 
-
+//->add('categorie', EntityType::class, array(
+//    	'class' => 'AppBundle:Categorie',
+//		'choice_label' => 'name',
+//		))
 }

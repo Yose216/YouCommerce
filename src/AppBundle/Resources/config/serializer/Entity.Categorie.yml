@@ -1,0 +1,16 @@
+# src/AppBundle/Resources/Config/serializer/Entity.Categorie.yml
+src\AppBundle\Entity\Categorie:
+    exclusion_policy: none
+    properties:
+        id:
+            groups: ['product', 'categorie']
+        name:
+            groups: ['product', 'categorie']
+        subName:
+            groups: ['product', 'categorie']
+        description:
+            groups: ['product', 'categorie']
+        image:
+            groups: ['product', 'categorie']
+        products:
+            groups: ['categorie']

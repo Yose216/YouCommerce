@@ -5,15 +5,11 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Product;
 use AppBundle\Form\ProductType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\View\ViewHandler;
-use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Product controller.
@@ -26,46 +22,33 @@ class ProductController extends Controller
      * Lists all product entities.
      *
 	 * @Rest\View()
-     * @Get("/products")
+     * @Rest\Get("/products")
      *
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+		$products = $em->getRepository('AppBundle:Product')->findAll();
+		/* @var $products Product[] */
 
-        $products = $em->getRepository('AppBundle:Product')->findAll();
-
-		$formatted = [];
-        foreach ($products as $product) {
-            $formatted[] = [
-            	'id' => $product->getId(),
-            	'name' => $product->getName(),
-				'image' => $product->getImage(),
-				'image2' => $product->getImage2(),
-				'image3' => $product->getImage3(),
-				'image4' => $product->getImage4(),
-				'price' => $product->getPrice(),
-				'description' => $product->getDescription(),
-				'categorie' => $product->getCategorie()->getName(),
-            ];
-        }
-
-        $view = View::create($formatted);
-        $view->setFormat('json');
-
-        return $view;
+        return $products;
     }
 
     /**
      * Creates a new product entity.
      *
-	 * @Rest\View
-     * @Post("/new/products")
+	 * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\Post("/new/categorie/{id}/products")
      *
      */
-    public function newAction(Request $request)
+    public function newAction($id, Request $request)
     {
+		$em = $this->getDoctrine()->getManager();
+		$categorie = $em->getRepository('AppBundle:Categorie')->find($id);
+		/* @var $categorie Categorie[] */
+
         $product = new Product();
+		$product->setCategorie($categorie);
         $form = $this->createForm('AppBundle\Form\ProductType', $product);
         $form->submit($request->request->all());
 
@@ -83,37 +66,17 @@ class ProductController extends Controller
 
     /**
      * Finds and displays a product entity.
-     *
-     * @Get("/products/{id}")
+     * @Rest\View()
+     * @Rest\Get("/products/{id}")
      *
      */
     public function showAction($id, Request $request)
     {
-//    	$deleteForm = $this->createDeleteForm($product);
 		$em = $this->getDoctrine()->getManager();
-
         $product = $em->getRepository('AppBundle:Product')->find($id);
+		/* @var $products Product[] */
 
-		$formatted[] = [
-            'id' => $product->getId(),
-            'name' => $product->getName(),
-			'image' => $product->getImage(),
-			'image2' => $product->getImage2(),
-			'image3' => $product->getImage3(),
-			'image4' => $product->getImage4(),
-			'price' => $product->getPrice(),
-			'description' => $product->getDescription(),
-			'categorie' => $product->getCategorie()->getName(),
-		];
-
-		if (empty($product)) {
-            return new JsonResponse(['message' => 'Object not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        $view = View::create($formatted);
-        $view->setFormat('json');
-
-        return $view;
+        return $product;
     }
 
 	/**
@@ -153,7 +116,7 @@ class ProductController extends Controller
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
         if (empty($product)) {
-            return new JsonResponse(['message' => 'Place not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Categorie not found'], Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm('AppBundle\Form\ProductType', $product);
@@ -176,7 +139,7 @@ class ProductController extends Controller
     /**
      * Deletes a product entity.
      *
-     * @Rest\View
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/delete/products/{id}")
 	 *
      */
@@ -185,25 +148,14 @@ class ProductController extends Controller
         $em = $this->getDoctrine()->getManager();
         $product = $em->getRepository('AppBundle:Product')->find($id);
 
+		if (empty($product)) {
+            throw new NotFoundHttpException('product not found');
+        }
+
 		if ($product) {
             $em->remove($product);
             $em->flush();
         }
     }
 
-    /**
-     * Creates a form to delete a product entity.
-     *
-     * @param Product $product The product entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-//    private function createDeleteForm(Product $product)
-//    {
-//        return $this->createFormBuilder()
-//            ->setAction($this->generateUrl('product_delete', array('id' => $product->getId())))
-//            ->setMethod('DELETE')
-//            ->getForm()
-//        ;
-//    }
 }

@@ -13,18 +13,21 @@ class CategorieControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Create a new entry in the database
-        $crawler = $client->request('GET', '/categorie/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /categorie/");
-        $crawler = $client->click($crawler->selectLink('Create a new entry')->link());
-
+        $crawler = $client->request('GET', '/categorie');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /categorie");
+        //$crawler = $client->click($crawler->selectLink('POST', '/new/categorie')->link());
+		$crawler = $client->request('POST', '/new/categorie');
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
             'appbundle_categorie[field_name]'  => 'Test',
-            // ... other fields to fill
+			'appbundle_categorie[field_subName]'  => 'Test',
+			'appbundle_categorie[field_description]'  => 'Test',
+			'appbundle_categorie[field_image]'  => 'Test',
+
         ));
 
         $client->submit($form);
-        $crawler = $client->followRedirect();
+        $crawler = $client->followRedirect(true);
 
         // Check data in the show view
         $this->assertGreaterThan(0, $crawler->filter('td:contains("Test")')->count(), 'Missing element td:contains("Test")');
